@@ -1,6 +1,8 @@
 package com.example.fireworkinterviewonetest
 
+import android.content.ClipData
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +13,8 @@ class MainActivityViewModel(
 ) : ViewModel() {
 
     private val uiModel = MutableLiveData<UiModel>()
+
+    fun getUiModel() = uiModel as LiveData<UiModel>
 
     fun search(hashTag: String) {
         viewModelScope.launch {
@@ -29,8 +33,9 @@ class MainActivityViewModel(
                 TODO("Show a suggestion to the user for a different search?")
             }
 
+            var id = 0
             val itemsListForUi = items.map { mapItem ->
-                Item(mapItem.key, mapItem.value)
+                HashTagItem(id++, mapItem.key, mapItem.value)
             }
 
             val sortedItemsListForUi = itemsListForUi.sortedByDescending { it.relatedness }
@@ -43,7 +48,7 @@ class MainActivityViewModel(
     }
 }
 
-data class UiModel(private val relatedItems: List<Item>)
+data class UiModel(val relatedItems: List<HashTagItem>)
 
-data class Item(val name: String, val relatedness: Int)
+data class HashTagItem(val id: Int, val name: String, val relatedness: Int)
 
