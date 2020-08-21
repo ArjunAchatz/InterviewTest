@@ -18,6 +18,11 @@ class MainActivityViewModel(
 
     fun search(hashTag: String) {
         viewModelScope.launch {
+            if (hashTag.isEmpty()) {
+                TODO("Validate response")
+                return@launch
+            }
+
             val relatedItemsResponse = kotlin.runCatching {
                 relatedItemsService.getRelatedItemsResponse(hashTag)
             }
